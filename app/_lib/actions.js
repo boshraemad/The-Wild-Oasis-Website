@@ -3,6 +3,8 @@
 
 import { signIn , signOut , auth} from "./auth";
 import { supabase } from "./supabase";
+import { revalidatePath } from "next/cache";
+
 export async function updateUser(formData){
   const session = await auth();
   if(!session) throw new Error("login first");
@@ -19,6 +21,7 @@ export async function updateUser(formData){
   .eq("id", session.user.guestId);
 
 if (error) throw new Error("Guest could not be updated");
+revalidatePath("/account");
 }
 
 export async function signInAction() {
